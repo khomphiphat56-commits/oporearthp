@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💜</title>
+
+<style>
+*{box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,#e7dbff,#f4edff,#d9c9ff);
+  overflow:hidden;
+}
+
+/* ---------- หน้าเซอร์ไพรส์ ---------- */
+#intro{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#c9a7ff,#9b7dff);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  z-index:100;
+}
+
+#intro h1{
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+#intro p{
+  font-size:15px;
+  opacity:.9;
+}
+
+#intro button{
+  margin-top:24px;
+  padding:14px 34px;
+  border:none;
+  border-radius:30px;
+  background:#fff;
+  color:#7a4bff;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+/* ---------- หน้าหลัก ---------- */
+.floating{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+
+.card{
+  position:relative;
+  z-index:10;
+  margin:7vh auto;
+  width:90%;
+  max-width:420px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(12px);
+  border-radius:28px;
+  padding:30px 22px;
+  text-align:center;
+  box-shadow:0 25px 45px rgba(150,100,200,.25);
+  opacity:0;
+  transform:translateY(30px);
+  transition:.8s ease;
+}
+
+.card.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.main-img{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  object-fit:cover;
+  border:5px solid #e0c6ff;
+  box-shadow:0 12px 30px rgba(150,100,200,.4);
+}
+
+h2{
+  margin:18px 0 6px;
+  color:#6a3fb3;
+}
+
+.card p{
+  color:#7a6a9a;
+  font-size:15px;
+}
+
+/* ---------- ลอย ---------- */
+.float-img{
+  position:absolute;
+  bottom:-80px;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  opacity:.55;
+  animation:rise linear forwards;
+}
+
+.heart{
+  position:absolute;
+  bottom:-40px;
+  opacity:.7;
+  animation:rise linear forwards;
+}
+
+@keyframes rise{
+  from{transform:translateY(0);opacity:0}
+  10%{opacity:1}
+  to{transform:translateY(-120vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<!-- หน้าเซอร์ไพรส์ -->
+<div id="intro">
+  <h1>มีอะไรอยากให้ดู 💜</h1>
+  <p>แตะเพื่อเปิดเพลงและเข้าไปข้างใน</p>
+  <button onclick="enterSite()">✨ แตะเพื่อเข้า</button>
+</div>
+
+<!-- พื้นหลังลอย -->
+<div class="floating" id="floating"></div>
+
+<!-- หน้าหลัก -->
+<div class="card" id="card">
+  <img src="main.jpg" class="main-img">
+  <h2>Happy Anniversary 💜</h2>
+  <p>ขอบคุณที่อยู่ด้วยกันเสมอ</p>
+</div>
+
+<!-- เพลง -->
+<audio id="music" loop playsinline>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById("music");
+const intro = document.getElementById("intro");
+const card = document.getElementById("card");
+const floating = document.getElementById("floating");
+
+const imgs = ["pic1.jpg","pic2.jpg"];
+const hearts = ["💜","💖","💗","💞","🤍","💙","💘"];
+
+/* 👉 สำคัญที่สุด: เพลงต้องเล่นตรงนี้ */
+function enterSite(){
+  music.muted = false;
+  music.volume = 1;
+  music.play();   // iOS ผ่านแน่นอน
+
+  intro.style.opacity = "0";
+  setTimeout(()=>{
+    intro.style.display="none";
+    card.classList.add("show");
+  },600);
+}
+
+/* สร้างของลอย */
+function spawn(){
+  const isImg = Math.random() > 0.45;
+
+  if(isImg){
+    const img = document.createElement("img");
+    img.src = imgs[Math.floor(Math.random()*imgs.length)];
+    img.className = "float-img";
+    img.style.left = Math.random()*100 + "vw";
+    img.style.animationDuration = (8+Math.random()*6)+"s";
+    floating.appendChild(img);
+    setTimeout(()=>img.remove(),15000);
+  }else{
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    h.style.left = Math.random()*100 + "vw";
+    h.style.fontSize = (16+Math.random()*16)+"px";
+    h.style.animationDuration = (6+Math.random()*6)+"s";
+    floating.appendChild(h);
+    setTimeout(()=>h.remove(),15000);
+  }
+}
+
+setInterval(spawn, 450);
+</script>
+
+</body>
+</html>
